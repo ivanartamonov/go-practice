@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -13,6 +14,6 @@ func main() {
 		log.Fatalf("Could not get ntp time: %s", err)
 	}
 
-	println("current time: " + time.Now().Round(time.Second).String())
-	println("exact time: " + ntpTime.Round(time.Second).String())
+	fmt.Println("current time: " + time.Now().Round(time.Second).String())
+	fmt.Println("exact time: " + ntpTime.Round(time.Second).String())
 }

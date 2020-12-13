@@ -27,18 +27,31 @@ func Unpack(packedString string) (string, error) {
 	}
 
 	var sb = strings.Builder{}
+	needEscape := false
 
 	for index, charRune := range chars {
 		nextIdx := index + 1
 		prevIdx := index - 1
 		nextCharExists := nextIdx < charsLength
 
-		if unicode.IsDigit(charRune) {
-			if unicode.IsDigit(chars[prevIdx]) {
+		if charRune == '\\' && !needEscape {
+			needEscape = true
+			continue
+		}
+
+		if unicode.IsDigit(charRune) && !needEscape {
+			isPrevWasEscaped := prevIdx-1 >= 0 && chars[prevIdx-1] == '\\'
+			if unicode.IsDigit(chars[prevIdx]) && !isPrevWasEscaped {
 				return "", ErrInvalidString
 			}
 			continue
 		}
+
+		if needEscape && unicode.IsLetter(charRune) {
+			return "", ErrInvalidString
+		}
+
+		needEscape = false
 
 		if nextCharExists {
 			repeatCount, err := strconv.Atoi(string(chars[nextIdx]))

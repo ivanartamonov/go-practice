@@ -30,16 +30,16 @@ func Top10(text string) []string {
 
 	sorted := sortByFreq(wordFreqMap)
 
-	var top []string
-	for _, val := range sorted[:10] {
-		top = append(top, val.Word)
+	var top = make([]string, 10)
+	for i, val := range sorted[:10] {
+		top[i] = val.Word
 	}
 
 	return top
 }
 
 func sortByFreq(wordFreq map[string]int) []WordFreq {
-	var sorted []WordFreq
+	var sorted = make([]WordFreq, len(wordFreq))
 
 	for word, freq := range wordFreq {
 		sorted = append(sorted, WordFreq{word, freq})

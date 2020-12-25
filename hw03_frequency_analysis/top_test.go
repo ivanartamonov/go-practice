@@ -48,6 +48,34 @@ func TestTop10(t *testing.T) {
 		require.Len(t, Top10(""), 0)
 	})
 
+	t.Run("small top", func(t *testing.T) {
+		expected := []string{"a", "b", "c"}
+		require.ElementsMatch(t, expected, Top10("a a a b b c"))
+	})
+
+	t.Run("multiple spaces", func(t *testing.T) {
+		expected := []string{"a", "b", "c"}
+		require.ElementsMatch(t, expected, Top10("a a a                 b b           c"))
+	})
+
+	t.Run("letters & digits", func(t *testing.T) {
+		text := "a 1 b 2 c 3 1 1 1 1 b b c c 4 4 5 5 6 6 7 7 8 8 9 9 10 10 e f g h G K L M N O P"
+		expected := []string{"1", "b", "c", "4", "5", "6", "7", "8", "9", "10"}
+		require.ElementsMatch(t, expected, Top10(text))
+	})
+
+	t.Run("special symbols", func(t *testing.T) {
+		text := "!@#$%^&*() !@#$%^&*() !@#$%^&*() ! ! @ @ # # $ $ % % & & * * ( ( ) ) 0 9 8 a b c"
+		expected := []string{"!@#$%^&*()", "!", "@", "#", "$", "%", "&", "*", "(", ")"}
+		require.ElementsMatch(t, expected, Top10(text))
+	})
+
+	t.Run("single word", func(t *testing.T) {
+		text := "One_big_strange_Single_word"
+		expected := []string{"One_big_strange_Single_word"}
+		require.ElementsMatch(t, expected, Top10(text))
+	})
+
 	t.Run("positive test", func(t *testing.T) {
 		if taskWithAsteriskIsCompleted {
 			expected := []string{"он", "а", "и", "что", "ты", "не", "если", "то", "его", "кристофер", "робин", "в"}
